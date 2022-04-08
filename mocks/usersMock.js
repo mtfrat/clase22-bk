@@ -9,17 +9,26 @@ export default class UserMock extends ContenedorMemoria{
 
     popular = (cant=50)=>{
         const nuevos = []
+        let prefix
         for(let i=0; i<cant;i++){
-            nuevos.push({
+            prefix = faker.name.prefix()
+            nuevos.push({[`${prefix}`]:{
                 name:faker.name.firstName(),
                 last_name:faker.name.lastName(),
                 email:faker.internet.email(),
                 id:faker.datatype.uuid()
-            })
+            }})
         }
-        const usersSchema = new schema.Entity('name')
+        const usersSchema = new schema.Entity('users')
+        const pageSchema = new schema.Entity('page',{
+            "Miss": usersSchema,
+            "Mrs.": usersSchema,
+            "Mr.": usersSchema,
+            "Ms.": usersSchema,
+            "Dr.": usersSchema
+        })
 
-        const normalizedData = normalize(blog,usersSchema)
+        const normalizedData = normalize(nuevos,pageSchema)
         console.log(JSON.stringify(normalizedData,null,'\t'));
         return nuevos;
     }
